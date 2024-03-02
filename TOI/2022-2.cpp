@@ -21,26 +21,22 @@ void init(){
 int main() {
     init();
     string in;
-    int cul = 'F' - 'A', cur = 'J' - 'A', ans = 0;
+    int dl = 'F' - 'A', dr = 'J' - 'A', ans = 0;
     cin >> in;
     for(int i = 0; i < in.size(); i++){
         in[i] -= 'A';
     }
+    vector<vector<vector<int>>> dp(in.size()+1, vector<vector<int>>(26, vector<int>(26)));
+    REP(i, 0, in.size()+1)REP(j, 0, 26)REP(k, 0, 26){
+        dp[i][j][k] = -1;
+    }
+    dp[0][dl][dr] = 0;
+    REP(i, 0, in.size())REP(L, 0, 26)REP(R, 0, 26){
+        int C = in[i];
+        if(dp[i][L][R] != -1){
+            dp[i+1][L][C] = min(dp[i+1][L][C], dp[i][L][R] + dis[R][C]);
+            dp[i+1][C][R] = min(dp[i+1][C][R], dp[i][L][R] + dis[L][C]);
+        }
+    }
+
 }
-/*This block of code is the core part of the dynamic programming solution in the `work()` function.
-
-Here's a breakdown of what it does:
-
-1. It iterates over all possible states `dp[i][j][k]` where `i` is the current character in the string, `j` is the position of the left finger, and `k` is the position of the right finger. 
-
-2. If the current state `dp[i][j][k]` is not `INF` (which means it's reachable), it tries to transition to the next state.
-
-3. The next character to type is `nxt = in[i+1]`.
-
-4. It considers two possible transitions:
-
-   - Move the left finger from `j` to `nxt` and keep the right finger at `k`. The distance for this move is `dp[i][j][k] + dis[j][nxt]`. If this is less than the current minimum distance to reach `dp[i+1][nxt][k]`, it updates the minimum distance.
-   
-   - Move the right finger from `k` to `nxt` and keep the left finger at `j`. The distance for this move is `dp[i][j][k] + dis[k][nxt]`. If this is less than the current minimum distance to reach `dp[i+1][j][nxt]`, it updates the minimum distance.
-
-This way, it calculates the minimum distance to type each character in the string, considering all possible positions of the left and right fingers.*/
